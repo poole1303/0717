@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>BGM</title>
+</head>
+
+<body style="margin:0">
+
+<audio
+  id="bgm"
+  autoplay
+  loop>
+  <source src="bgm.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const audio = document.getElementById("bgm");
+
+audio.volume = 0.5;
+
+audio.play();
+
+window.pauseBGM = function(){
+
+  audio.pause();
+
+}
+
+window.playBGM = function(){
+
+  audio.play();
+
+}
+
+window.setBGMVolume = function(v){
+
+  audio.volume = v;
+
+}
+
+</script>
+
+</body>
+</html>

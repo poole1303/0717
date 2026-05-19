@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>臺灣岩石分布圖</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:"Noto Sans TC", Arial, sans-serif;
+  background:#083244;
+  color:white;
+}
+
+#bgm{
+  display:none;
+}
+
+#intro{
+
+  position:fixed;
+
+  inset:0;
+
+  background:
+  linear-gradient(
+    rgba(0,0,0,.75),
+    rgba(0,0,0,.75)
+  ),
+  url("stone map.jpg");
+
+  background-size:cover;
+  background-position:center;
+
+  z-index:99999;
+
+  display:flex;
+  flex-direction:column;
+
+  justify-content:center;
+  align-items:center;
+
+  text-align:center;
+
+  transition:1s;
+}
+
+#intro h1{
+
+  font-size:52px;
+
+  margin:0;
+
+  letter-spacing:5px;
+}
+
+#intro p{
+
+  margin-top:20px;
+
+  font-size:22px;
+
+  color:#d7e6ef;
+}
+
+#enterBtn{
+
+  margin-top:40px;
+
+  border:none;
+
+  background:#ffd44d;
+
+  color:#222;
+
+  font-size:22px;
+
+  font-weight:bold;
+
+  padding:18px 40px;
+
+  border-radius:18px;
+
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+#enterBtn:hover{
+
+  transform:scale(1.05);
+
+  background:#ffe27e;
+}
+
+#mainContent{
+
+  opacity:0;
+
+  transition:1s;
+}
+
+.header{
+  text-align:center;
+  padding:22px 20px 10px;
+}
+
+.header h1{
+  margin:0;
+  font-size:34px;
+  letter-spacing:3px;
+}
+
+.header p{
+  margin-top:10px;
+  font-size:14px;
+  color:#d7e6ef;
+}
+
+
+.container{
+  width:95%;
+  max-width:1500px;
+  margin:auto;
+
+  display:grid;
+  grid-template-columns:520px 1fr;
+  gap:30px;
+
+  align-items:start;
+  padding:20px;
+}
+
+.left{
+  position:sticky;
+  top:20px;
+  text-align:center;
+}
+
+.map{
+  width:520px;
+  height:auto;
+
+  border-radius:20px;
+
+  background:white;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,.45);
+}
+
+
+.buttons{
+  width:520px;
+
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+
+  margin-top:22px;
+}
+
+button{
+  border:none;
+  border-radius:14px;
+
+  padding:13px 22px;
+
+  font-size:17px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  color:white;
+
+  transition:.25s;
+}
+
+button:hover{
+  transform:translateY(-3px);
+  filter:brightness(1.08);
+}
+
+.sedimentary{
+  background:#d8a72a;
+}
+
+.metamorphic{
+  background:#2bb6c4;
+}
+
+.igneous{
+  background:#e86b00;
+}
+
+.right{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:20px;
+}
+
+.card{
+  min-height:220px;
+
+  border-radius:20px;
+
+  padding:26px 30px;
+
+  line-height:1.8;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+
+  box-shadow:
+  0 8px 22px rgba(0,0,0,.25);
+}
+
+.card h2{
+  margin:0 0 14px;
+
+  font-size:38px;
+
+  letter-spacing:4px;
+}
+
+.card p{
+  margin:7px 0;
+
+  font-size:17px;
+
+  font-weight:600;
+}
+
+
+.card1{
+  background:#50698d;
+}
+
+.card2{
+  background:#5c7a87;
+}
+
+.card3{
+  background:#6d6f79;
+}
+
+.card4{
+  background:#747786;
+}
+
+.card5{
+  background:#8a6a72;
+}
+
+.earth{
+  background:#8d6e63;
+}
+
+
+.highlight-yellow{
+  color:#ffd44d;
+  font-weight:bold;
+}
+
+.highlight-orange{
+  color:#ffb347;
+  font-weight:bold;
+}
+
+
+.source{
+  text-align:center;
+
+  padding:20px 10px 40px;
+
+  font-size:15px;
+
+  color:#d7e6ef;
+}
+
+.source a{
+  color:#ffd44d;
+
+  text-decoration:none;
+
+  font-weight:bold;
+}
+
+.source a:hover{
+  text-decoration:underline;
+}
+
+
+@media(max-width:1100px){
+
+  .container{
+    grid-template-columns:1fr;
+  }
+
+  .left{
+    position:static;
+  }
+
+  .map,
+  .buttons{
+    width:100%;
+    max-width:520px;
+  }
+
+  .buttons{
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .card{
+    min-height:auto;
+  }
+
+  .card h2{
+    font-size:32px;
+  }
+
+  #intro h1{
+    font-size:38px;
+  }
+
+  #intro p{
+    font-size:18px;
+  }
+
+}
+.quiz-button{
+  margin-top:18px;
+  text-align:center;
+}
+
+.quiz-button button{
+
+  background:#ffffff;
+
+  color:#0b2c3d;
+
+  border:none;
+
+  padding:14px 34px;
+
+  border-radius:14px;
+
+  font-size:22px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  box-shadow:0 6px 16px rgba(0,0,0,.35);
+
+  transition:.25s;
+}
+
+.quiz-button button:hover{
+
+  transform:translateY(-3px);
+
+  background:#4F46E5;
+}
+
+.quiz-button{
+  margin-top:18px;
+  text-align:center;
+}
+
+.quiz-button button{
+  background:#7b76e4;
+  color:white;
+  border:none;
+  padding:16px 40px;
+  border-radius:16px;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.35);
+  transition:.25s;
+}
+
+.quiz-button button:hover{
+  transform:translateY(-4px);
+  background:#a6a2e7;
+}
+
+
+
+.rock3d-button{
+  margin-top:18px;
+  text-align:center;
+}
+
+.rock3d-button button{
+  background:#7e57c2;
+  color:white;
+  border:none;
+  padding:16px 40px;
+  border-radius:16px;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.35);
+  transition:.25s;
+}
+
+.rock3d-button button:hover{
+  transform:translateY(-4px);
+  background:#9575cd;
+}
+
+.fun-button{
+  margin-top:18px;
+  text-align:center;
+}
+
+.fun-button button{
+  background:#ff4fa3;
+  color:white;
+  border:none;
+  padding:16px 40px;
+  border-radius:16px;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.35);
+  transition:.25s;
+}
+
+.fun-button button:hover{
+  transform:translateY(-4px);
+  background:#ff8bc3;
+}
+
+.video-section{
+
+  margin-top:50px;
+
+  text-align:center;
+
+}
+
+.video-section h2{
+
+  color:white;
+
+  font-size:42px;
+
+  margin-bottom:24px;
+
+}
+
+.video-section iframe{
+
+  width:90%;
+
+  max-width:1000px;
+
+  height:560px;
+
+  border:none;
+
+  border-radius:24px;
+
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="bgm" loop>
+  <source src="bgm.mp3" type="audio/mpeg">
+</audio>
+
+<div id="intro">
+
+  <h1>
+    臺灣的岩石
+    <br>
+    AR 數位展示
+  </h1>
+
+  <p>
+    Taiwan Rock AR Exhibition
+  </p>
+
+  <button id="enterBtn">
+    點擊進入展示
+  </button>
+
+</div>
+
+<div id="mainContent">
+
+  <div class="header">
+
+    <h1>臺灣的岩石分布圖</h1>
+
+    <p>
+      請先觀察臺灣岩石分布，再選擇要掃描的岩石類型！
+    </p>
+
+  </div>
+
+  <div class="container">
+
+    <div class="left">
+
+      <img
+        class="map"
+        src="stone map.jpg"
+        alt="臺灣岩石分布圖"
+      >
+
+      <div class="buttons">
+
+        <button
+          class="sedimentary"
+          onclick="location.href='sedimentary.html'"
+        >
+          沉積岩 AR
+        </button>
+
+        <button
+          class="metamorphic"
+          onclick="location.href='metamorphic.html'"
+        >
+          變質岩 AR
+        </button>
+
+        <button
+          class="igneous"
+          onclick="location.href='igneous.html'"
+        >
+          火成岩 AR
+        </button>
+
+      </div>
+
+      <div class="quiz-button">
+
+        <div class="quiz-button">
+  <button onclick="location.href='choice.html'">
+    小小測驗
+  </button>
+</div>
+
+  <div class="rock3d-button">
+  <button onclick="location.href='rock3d.html'">
+    3D岩石互動
+  </button>
+</div>
+
+  <div class="fun-button">
+  <button onclick="location.href='taste.html'">
+    趣味問答大考驗
+  </button>
+</div>
+
+<div class="video-section">
+
+  <h2>點擊岩石介紹影片瞭解更多</h2>
+
+<iframe
+  id="ytplayer"
+  width="900"
+  height="500"
+  src="https://www.youtube.com/embed/TfmjuhcYSgI?enablejsapi=1"
+  title="岩石介紹影片"
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
+
+</div>
+
+</div>
+
+    </div>
+
+    <div class="right">
+
+      <div class="card card1">
+
+        <h2>山的主體是岩石</h2>
+
+        <p>
+          一座山，主要由什麼組成的呢？答案就是 
+          <span class="highlight-yellow">岩石</span>。
+        </p>
+
+        <p>
+          只是常被茂密的植被所覆蓋，有如穿上了衣服一般。
+        </p>
+
+        <p>
+          幸好我們仍能透過裸露的岩壁或崩落的岩石來觀察。
+        </p>
+
+      </div>
+
+      <div class="card card2">
+
+        <h2>眼前的岩石新鮮嗎？</h2>
+
+        <p>
+          爬山時，終於遇到岩石可以觀察了！
+        </p>
+
+        <p>
+          但眼前所見的岩石，通常已常年暴露在外，表層已經風化了！
+        </p>
+
+        <p>
+          因此需要透過地質鎚或岩石互敲，設法將岩石敲破，以便觀察破裂後呈現的
+          <span class="highlight-yellow">新鮮面</span>。
+        </p>
+
+      </div>
+
+      <div class="card card3">
+
+        <h2>岩石種類三選一</h2>
+
+        <p>
+          眼前所見的岩石，一定會是以下三種的其中一種：
+          <span class="highlight-yellow">火成岩</span>、
+          <span class="highlight-yellow">沉積岩</span>、
+          <span class="highlight-yellow">變質岩</span>。
+        </p>
+
+        <p>
+          岩石三大分類，是依據形成原因來區分，因此若能判斷出岩石種類，通常也暗示著這座山可能如何形成。
+        </p>
+
+      </div>
+
+      <div class="card card4">
+
+        <h2>判斷岩石的訣竅</h2>
+
+        <p>
+          知道岩石三大分類後，問題是要如何判斷呢？
+        </p>
+
+        <p>
+          以下提供三個比較簡易的方式：
+        </p>
+
+        <p>
+          <span class="highlight-yellow">
+            1. 對照法：
+          </span>
+
+          將眼前的岩石，和各類岩石的圖片對照，比對出特徵最符合的岩石。
+        </p>
+
+        <p>
+          <span class="highlight-yellow">
+            2. 以圖搜圖法：
+          </span>
+
+          將眼前岩石拍下，丟給 Google 搜圖，找出特徵最符合的岩石。
+        </p>
+
+        <p>
+          <span class="highlight-yellow">
+            3. 分布法：
+          </span>
+
+          三大岩類在臺灣有特定的空間分布，登山前，可以先確認該地點比較容易出現什麼岩石。
+        </p>
+
+      </div>
+
+      <div class="card card5">
+
+        <h2>岩石有軟硬之分？</h2>
+
+        <p>
+          岩石是由
+          <span class="highlight-yellow">礦物</span>
+          組成的。
+        </p>
+
+        <p>
+          岩石的軟硬，與組成礦物的硬度有關，也與礦物之間的膠結程度有關。
+        </p>
+
+        <p>
+          岩性的軟硬，將影響地形的發育。
+        </p>
+
+        <p>
+          例如，岩性越堅硬，較能抵抗侵蝕，易於形成山稜；反之則易形成谷地。
+        </p>
+
+      </div>
+
+<div class="card earth">
+
+  <h2>臺灣岩石分布</h2>
+
+  <p>
+    臺灣附近的岩石分布大致如下：
+  </p>
+
+  <p>
+    <span class="highlight-yellow">
+    1. 西部平原
+    </span>
+    主要為沉積岩。
+  </p>
+
+  <p>
+    <span class="highlight-yellow">
+    2. 中央山脈與雪山山脈
+    </span>
+    多為變質岩。
+  </p>
+
+  <p>
+    <span class="highlight-yellow">
+    3. 海岸山脈與北部大屯火山群
+    </span>
+    多為火成岩。
+  </p>
+
+</div>
+
+    </div>
+
+  </div>
+
+  <div class="source">
+
+    圖片來源：
+
+    <a
+      href="https://share.google/lNMIUexuDFmtYHxwE"
+      target="_blank"
+    >
+      臺灣岩石分布圖 Google 分享連結
+    </a>
+      <br>
+      影片來源：
+
+    <a
+      href="https://youtu.be/TfmjuhcYSgI?si=JQHM-P8PEJjv__Zo"
+      target="_blank"
+    >
+      均一教育平台 Junyi Academy 三大岩類
+    </a>
+<br>
+      音樂來源：
+
+    <a
+      href="https://youtu.be/I1Kx8Ii4eYk?si=keHO1JDWBbyWYa0I"
+      target="_blank"
+    >
+      G.E.M.鄧紫棋【岩石裡的花 LOVE FINDS A WAY】
+    </a>
+
+  </div>
+
+</div>
+
+<script>
+
+const intro = document.getElementById("intro");
+
+const enterBtn = document.getElementById("enterBtn");
+
+const mainContent = document.getElementById("mainContent");
+
+const bgm = document.getElementById("bgm");
+
+enterBtn.addEventListener("click", () => {
+
+    bgm.volume = 0.5;
+
+    bgm.play();
+
+    intro.style.opacity = "0";
+
+    setTimeout(() => {
+
+        intro.style.display = "none";
+
+        mainContent.style.opacity = "1";
+
+    }, 1000);
+
+});
+
+</script>
+
+</body>
+</html>

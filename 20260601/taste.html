@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>趣味問答大考驗</title>
+
+<style>
+body{
+  margin:0;
+  padding:40px 20px;
+  background:#052c3d;
+  font-family:"Noto Sans TC", Arial, sans-serif;
+  color:white;
+  text-align:center;
+}
+
+h1{
+  font-size:46px;
+  margin-bottom:12px;
+}
+
+.subtitle{
+  color:#d7e6ef;
+  font-size:20px;
+  margin-bottom:28px;
+}
+
+#quizBox{
+  max-width:1000px;
+  margin:auto;
+  background:rgba(0,0,0,.32);
+  padding:30px;
+  border-radius:28px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+#questionImage{
+  width:100%;
+  max-width:760px;
+  max-height:420px;
+  object-fit:contain;
+  border-radius:20px;
+  margin-bottom:24px;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+  background:white;
+}
+
+#question{
+  font-size:32px;
+  line-height:1.7;
+  margin-bottom:26px;
+  font-weight:bold;
+}
+
+.choice{
+  display:block;
+  width:100%;
+  max-width:720px;
+  margin:16px auto;
+  padding:18px;
+  font-size:24px;
+  border:none;
+  border-radius:18px;
+  cursor:pointer;
+  transition:.25s;
+  background:white;
+  color:#222;
+  font-weight:bold;
+}
+
+.choice:hover{
+  transform:scale(1.03);
+  background:#ffe082;
+}
+
+#result{
+  margin-top:28px;
+  font-size:28px;
+  font-weight:bold;
+  min-height:90px;
+  line-height:1.8;
+}
+
+#nextBtn{
+  margin-top:20px;
+  padding:16px 42px;
+  font-size:24px;
+  border:none;
+  border-radius:18px;
+  background:#ec4899;
+  color:white;
+  cursor:pointer;
+  display:none;
+  font-weight:bold;
+}
+
+#back{
+  display:inline-block;
+  margin-top:35px;
+  padding:14px 32px;
+  background:#263238;
+  color:white;
+  text-decoration:none;
+  border-radius:16px;
+  font-size:22px;
+}
+
+#bgmFrame{
+  position:fixed;
+  width:0;
+  height:0;
+  border:none;
+  opacity:0;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgm" autoplay loop playsinline>
+
+  <source src="bgm.mp3" type="audio/mpeg">
+
+</audio>
+
+
+<iframe src="bgm.html" allow="autoplay" id="bgmFrame"></iframe>
+
+<h1>趣味問答大考驗</h1>
+
+<div class="subtitle">
+看看你對「Stone」、「Rock」相關冷知識熟不熟
+</div>
+
+<div id="quizBox">
+
+  <img id="questionImage" src="taste1.jpg">
+
+  <div id="question"></div>
+
+  <div id="choices"></div>
+
+  <div id="result"></div>
+
+  <button id="nextBtn" onclick="nextQuestion()">
+    下一題
+  </button>
+
+</div>
+
+<a id="back" href="finalexam.html">
+返回地圖
+</a>
+
+<audio id="correctSound" src="V.mp3"></audio>
+<audio id="wrongSound" src="X.mp3"></audio>
+
+<script>
+
+const bgm = document.getElementById("bgm");
+
+bgm.volume = 0.5;
+
+document.body.addEventListener("click", () => {
+
+  bgm.play();
+
+}, { once:true });
+
+const quizData = [
+
+  {
+    image:"taste1.jpg",
+    question:"1. Emma Stone 主演過什麼電影？",
+    choices:[
+      "《醉好的時光》",
+      "《樂來越愛你》",
+      "《我和我的冠軍女兒》",
+      "《大尾鱸鰻》"
+    ],
+    answer:"《樂來越愛你》",
+    explanation:"Emma Stone 曾主演《樂來越愛你》，並憑此片受到廣泛關注。"
+  },
+
+  {
+    image:"taste2.jpg",
+    question:"2.《閃電十一人》大岩壁必殺技的使用者是誰？",
+    choices:[
+      "鬼道有人",
+      "豪炎寺修也",
+      "壁山塀吾郎",
+      "一之瀨一哉"
+    ],
+    answer:"壁山塀吾郎",
+    explanation:"大岩壁是壁山塀吾郎的代表性防守必殺技。"
+  },
+
+  {
+    image:"taste3.jpg",
+    question:"3.COLD STONE 是什麼品牌？",
+    choices:[
+      "運動連鎖店",
+      "火鍋連鎖店",
+      "冰淇淋連鎖店",
+      "電器連鎖店"
+    ],
+    answer:"冰淇淋連鎖店",
+    explanation:"COLD STONE 是知名冰淇淋連鎖品牌。"
+  },
+
+  {
+    image:"taste4.jpg",
+    question:"4.「五月天」的石頭在樂團中擔任什麼？",
+    choices:[
+      "鼓手",
+      "吉他手",
+      "主唱",
+      "貝斯手"
+    ],
+    answer:"吉他手",
+    explanation:"五月天成員石頭在樂團中擔任吉他手。"
+  },
+
+  {
+    image:"taste5.jpg",
+    question:"5.《會痛的石頭》是誰唱的？",
+    choices:[
+      "林俊傑",
+      "孫燕姿",
+      "蕭敬騰",
+      "郁可唯"
+    ],
+    answer:"蕭敬騰",
+    explanation:"《會痛的石頭》是蕭敬騰演唱的歌曲。"
+  },
+
+  {
+    image:"taste6.jpg",
+    question:"6.誰曾唱過：「岩石裡的花會開，離開的你會回來。」？",
+    choices:[
+      "周杰倫",
+      "鄧紫棋",
+      "陳勢安",
+      "孫盛希"
+    ],
+    answer:"鄧紫棋",
+    explanation:"這句歌詞出自鄧紫棋演唱的歌曲《岩石裡的花》。"
+  },
+
+  {
+  image:"taste7.jpg",
+  question:"7.《鬼滅之刃》中岩之呼吸是誰的呼吸法？",
+  choices:[
+    "我妻善逸",
+    "悲鳴嶼行冥",
+    "栗花落香奈乎",
+    "煉獄杏壽郎"
+  ],
+  answer:"悲鳴嶼行冥",
+  explanation:"岩之呼吸是鬼殺隊「岩柱」悲鳴嶼行冥所使用的呼吸法。"
+},
+
+{
+  image:"taste8.jpg",
+  question:"8.下列寶可夢中何者具備岩石屬性？",
+  choices:[
+    "可達鴨",
+    "大岩蛇",
+    "甲賀忍蛙",
+    "蒂蕾喵"
+  ],
+  answer:"大岩蛇",
+  explanation:"大岩蛇是岩石／地面屬性的寶可夢。"
+},
+
+{
+  image:"taste9.jpg",
+  question:"9.《蠟筆小新》中誰最喜歡蒐集石頭？",
+  choices:[
+    "櫻田妮妮",
+    "河村獵豹",
+    "阿呆",
+    "酢乙女愛"
+  ],
+  answer:"阿呆",
+  explanation:"阿呆非常喜歡觀察與蒐集各種石頭。"
+},
+
+{
+  image:"taste10.jpg",
+  question:"10.中國古典四大小說名著之一，別稱「石頭記」的是？",
+  choices:[
+    "《西遊記》",
+    "《紅樓夢》",
+    "《水滸傳》",
+    "《三國演義》"
+  ],
+  answer:"《紅樓夢》",
+  explanation:"《紅樓夢》又稱《石頭記》，是中國古典文學代表作之一。"
+},
+  
+
+];
+
+let currentQuestion = 0;
+let answeredCorrectly = false;
+
+function loadQuestion(){
+
+  const q = quizData[currentQuestion];
+
+  answeredCorrectly = false;
+
+  document.getElementById("questionImage").src = q.image;
+
+  document.getElementById("question").innerHTML =
+    q.question;
+
+  document.getElementById("result").innerHTML = "";
+
+  document.getElementById("nextBtn").style.display =
+    "none";
+
+  const choicesDiv =
+    document.getElementById("choices");
+
+  choicesDiv.innerHTML = "";
+
+  const shuffledChoices =
+    [...q.choices].sort(() => Math.random() - 0.5);
+
+  shuffledChoices.forEach(choice => {
+
+    const btn = document.createElement("button");
+
+    btn.className = "choice";
+
+    btn.innerText = choice;
+
+    btn.onclick = () => checkAnswer(choice);
+
+    choicesDiv.appendChild(btn);
+
+  });
+
+}
+
+function checkAnswer(selected){
+
+  const q = quizData[currentQuestion];
+
+  const result =
+    document.getElementById("result");
+
+  if(selected === q.answer){
+
+    document.getElementById("correctSound").play();
+
+    answeredCorrectly = true;
+
+    result.innerHTML =
+      "✔ 答對了！太厲害了！<br>" +
+      "你真的很懂 Stone、Rock 相關冷知識。";
+
+    result.style.color = "#8cff66";
+
+    document.getElementById("nextBtn").style.display =
+      "inline-block";
+
+  }else{
+
+    document.getElementById("wrongSound").play();
+
+    result.innerHTML =
+      "✘ 答錯了！<br>" +
+      q.explanation +
+      "<br><br>請再選一次，答對才能進入下一題。";
+
+    result.style.color = "#ff8a80";
+
+    document.getElementById("nextBtn").style.display =
+      "none";
+
+  }
+
+}
+
+function nextQuestion(){
+
+  if(!answeredCorrectly){
+    return;
+  }
+
+  currentQuestion++;
+
+  if(currentQuestion < quizData.length){
+
+    loadQuestion();
+
+  }else{
+
+    document.getElementById("quizBox").innerHTML = `
+
+      <h2 style="font-size:52px;">
+      恭喜完成趣味問答！
+      </h2>
+
+      <p style="font-size:30px; line-height:2;">
+      你已完成 10 題 Stone、Rock 趣味知識挑戰。<br>
+      從岩石到電影、動漫、音樂、品牌與文學都難不倒你！
+      </p>
+
+      <a href="finalexam.html"
+      style="
+      display:inline-block;
+      margin-top:25px;
+      padding:18px 40px;
+      background:#ec4899;
+      color:white;
+      text-decoration:none;
+      border-radius:18px;
+      font-size:26px;
+      font-weight:bold;">
+      返回主頁
+      </a>
+
+    `;
+
+  }
+
+}
+
+loadQuestion();
+
+</script>
+<script>
+
+window.addEventListener("load", () => {
+
+  const bgm = document.getElementById("bgm");
+
+  bgm.volume = 0.5;
+
+  const playPromise = bgm.play();
+
+  if(playPromise !== undefined){
+
+    playPromise.catch(() => {
+
+      document.body.addEventListener("click", () => {
+        bgm.play();
+      }, { once:true });
+
+    });
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>

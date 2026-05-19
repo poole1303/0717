@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>沉積岩 AR</title>
+
+<script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+        }
+        #back{
+  position:fixed;
+  top:15px;
+  left:15px;
+  z-index:999;
+  background:rgba(0,0,0,.7);
+  color:white;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:16px;
+  text-decoration:none;
+}
+#hint{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:999;
+  background:rgba(0,0,0,.65);
+  color:white;
+  padding:10px 16px;
+  border-radius:12px;
+  font-size:15px;
+  text-align:center;
+}
+
+#bgmFrame{
+  position:fixed;
+  width:0;
+  height:0;
+  border:none;
+  opacity:0;
+  pointer-events:none;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <iframe
+  src="bgm.html"
+  allow="autoplay"
+  id="bgmFrame">
+</iframe>
+
+    <a-scene
+        mindar-image="
+            imageTargetSrc: ./sedimentary rock.mind;
+            autoStart: true;
+            uiLoading: true;
+            uiError: true;
+            uiScanning: true;
+        "
+        color-space="sRGB"
+        renderer="colorManagement: true; physicallyCorrectLights: true"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+    >
+
+    <a id="back" href="finalexam.html">
+返回地圖
+</a>
+<div id="hint">
+請掃描沉積岩圖片，即可觀看沉積岩介紹與種類
+</div>
+
+
+        <a-assets>
+            <img id="resultImg" src="./card3.JPG" />
+        </a-assets>
+
+        <a-light type="ambient" intensity="1"></a-light>
+
+        <a-camera look-controls="enabled: false"></a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-plane 
+                src="#resultImg"
+                width="1.2"
+                height="0.7"
+                position="0 0 0"
+                material="shader: flat; transparent: true;"
+                animation="
+                    property: position;
+                    from: 0 0 0;
+                    to: 0 0.2 0;
+                    dur: 1200;
+                    dir: alternate;
+                    loop: true;
+                    easing: easeInOutSine;
+                ">
+            </a-plane>
+        </a-entity>
+
+    </a-scene>
+</body>
+</html>
